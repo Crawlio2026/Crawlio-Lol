@@ -6,7 +6,7 @@
   <title>Crawlio Network</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -14,274 +14,252 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0b0d0f;
-      min-height: 100vh;
+      background: #030408;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
       color: #e9edf2;
+      position: relative;
+      overflow: hidden;
     }
 
-    body::before {
-      content: '';
+    /* GIF background — fully visible, no heavy overlay */
+    .bg-gif {
       position: fixed;
       inset: 0;
-      background-image: 
-        radial-gradient(circle at 30% 20%, rgba(64, 128, 255, 0.12) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 200, 150, 0.08) 0%, transparent 55%),
-        repeating-linear-gradient(45deg, rgba(255,255,255,0.008) 0px, rgba(255,255,255,0.008) 2px, transparent 2px, transparent 8px);
-      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       z-index: 0;
+      pointer-events: none;
     }
 
+    /* Barely-there vignette so edges don't feel flat */
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
+    }
+
+    /* Floating stars */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow: 0 0 6px 1px rgba(180, 210, 255, 0.9), 0 0 12px 2px rgba(120, 170, 255, 0.5);
+      animation: floatStar linear infinite;
+    }
+
+    @keyframes floatStar {
+      0%   { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
+      12%  { opacity: 0.95; }
+      50%  { opacity: 0.55; transform: translateY(-55vh) translateX(18px) scale(1); }
+      88%  { opacity: 0.75; }
+      100% { transform: translateY(-110vh) translateX(-12px) scale(0.5); opacity: 0; }
+    }
+
+    /* ---------- NORMAL CARD — clean frosted glass, background shows through ---------- */
     .card {
       position: relative;
-      z-index: 1;
-      max-width: 900px;
+      z-index: 3;
+      max-width: 760px;
       width: 100%;
-      background: rgba(18, 22, 28, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 48px;
-      padding: 3rem 2.5rem;
-      box-shadow: 
-        0 30px 50px -20px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.02) inset,
-        0 0 40px rgba(70, 130, 255, 0.06);
+      background: rgba(10, 13, 19, 0.42);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 28px;
+      padding: 3.5rem 3rem;
+      text-align: center;
+      box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.85);
     }
 
-    .brand-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-
-    .crawlio-mark {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .globe-dot {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 18px;
-      color: #ffffff;
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-    }
-
-    .crawlio-text {
-      font-weight: 600;
-      font-size: 1.1rem;
-      letter-spacing: -0.01em;
-      background: linear-gradient(120deg, #ffffff, #b9d0ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .domain-section {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 2rem;
-    }
-
-    .domain-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #8f9bb3;
-      margin-bottom: 0.6rem;
-    }
-
-    .domain-name {
-      font-size: clamp(2.4rem, 8vw, 4.2rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      background: linear-gradient(145deg, #ffffff 20%, #a0b8e0 90%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-      word-break: break-word;
-    }
-
-    .domain-tld {
-      background: linear-gradient(135deg, #3b82f6, #2dd4bf);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .status-pill {
+    /* Brand pill */
+    .brand {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 1rem;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      border-radius: 60px;
-      padding: 0.5rem 1.2rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #6ee7b7;
-    }
-
-    .status-pill .dot {
-      width: 8px;
-      height: 8px;
-      background: #10b981;
-      border-radius: 50%;
-      box-shadow: 0 0 12px #10b981;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.2); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .owner-message {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .message-text {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      color: #d0d9e6;
-      max-width: 85%;
-      font-weight: 400;
-      border-left: 3px solid #3b82f6;
-      padding-left: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .message-text strong {
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .contact-block {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1.5rem;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 36px;
-      padding: 1.2rem 1.8rem;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
       gap: 12px;
+      margin-bottom: 2.5rem;
+      padding: 0.5rem 1.4rem 0.5rem 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 100px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
 
-    .contact-icon {
-      font-size: 1.3rem;
-      opacity: 0.8;
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      display: block;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.55);
     }
 
-    .contact-detail {
-      display: flex;
-      flex-direction: column;
+    .brand-name {
+      font-weight: 600;
+      font-size: 0.98rem;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
     }
 
-    .contact-detail .label {
-      font-size: 0.7rem;
+    /* Eyebrow */
+    .eyebrow {
+      font-size: 0.74rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #8f9bb3;
+      letter-spacing: 0.24em;
+      color: #c3cfe2;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
     }
 
-    .contact-detail .value {
-      font-weight: 500;
-      color: #e9edf2;
-      font-size: 1rem;
+    /* Domain */
+    .domain {
+      font-size: clamp(2.8rem, 10vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1;
+      margin-bottom: 1.6rem;
+      word-break: break-word;
+      background: linear-gradient(150deg, #ffffff 15%, #d6e4ff 60%, #8ff5e6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.55));
     }
 
-    .contact-detail .value a {
-      color: #6ea8ff;
+    /* Divider */
+    .divider {
+      width: 70px;
+      height: 3px;
+      margin: 0 auto 2rem;
+      border-radius: 4px;
+      background: linear-gradient(90deg, transparent, #3b82f6, #2dd4bf, transparent);
+      opacity: 0.9;
+      box-shadow: 0 0 16px rgba(59, 130, 246, 0.6);
+    }
+
+    /* Statement */
+    .statement {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #f0f5fc;
+      max-width: 34rem;
+      margin: 0 auto;
+      font-weight: 400;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+    }
+
+    .statement strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .learn-link {
+      position: relative;
+      display: inline-block;
+      color: #a8cdff;
       text-decoration: none;
+      font-weight: 700;
       transition: color 0.2s ease;
+      text-shadow: 0 0 14px rgba(59, 130, 246, 0.5);
     }
 
-    .contact-detail .value a:hover {
-      color: #a0c4ff;
-      text-decoration: underline;
+    .learn-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 1.5px;
+      background: linear-gradient(90deg, #3b82f6, #2dd4bf);
+      border-radius: 2px;
+      transform: scaleX(0.6);
+      transform-origin: left;
+      transition: transform 0.2s ease;
+    }
+
+    .learn-link:hover {
+      color: #dcebff;
+    }
+
+    .learn-link:hover::after {
+      transform: scaleX(1);
     }
 
     @media (max-width: 600px) {
       .card {
-        padding: 2rem 1.5rem;
-        border-radius: 32px;
+        padding: 2.6rem 1.5rem;
+        border-radius: 22px;
       }
-      .message-text {
-        max-width: 100%;
-        font-size: 1.05rem;
-      }
-      .contact-block {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1.2rem 1.5rem;
+      .statement {
+        font-size: 1.02rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="brand-row">
-      <div class="crawlio-mark">
-        <div class="globe-dot">C</div>
-        <span class="crawlio-text">Crawlio Network</span>
-      </div>
+  <img class="bg-gif" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGFmbDIyZWp5Y3ZobTdwZXJ2amZsMWFiaDBvbHdpcHZvOHJ2NnBlYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GK7dGndK4kyOozR9Xk/giphy.gif" alt="" aria-hidden="true">
+  <div class="bg-overlay"></div>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+
+  <main class="card">
+    <div class="brand">
+      <img class="logo-img" src="https://cdn.phototourl.com/member/2026-10-20-015227a9-132b-4048-8342-16c05ea6816d.jpg" alt="Crawlio Network logo">
+      <span class="brand-name">Crawlio Network</span>
     </div>
 
-    <div class="domain-section">
-      <div class="domain-label">This domain is owned by</div>
-      <div class="domain-name">crawlio<span class="domain-tld">.xyz</span></div>
-      <div class="status-pill">
-        <span class="dot"></span>
-        Verified owner
-      </div>
-    </div>
+    <div class="eyebrow">This domain is owned by</div>
+    <h1 class="domain">crawlio</h1>
+    <div class="divider"></div>
 
-    <div class="owner-message">
-      <p class="message-text">
-        This domain is owned and operated by <strong>Crawlio Network</strong>.
-        Visit us at our main site for more information.
-      </p>
+    <p class="statement">
+      <strong>Crawlio Network</strong>.
+      <a class="learn-link" href="https://crawlio.xyz/about" target="_blank" rel="noopener">Learn more</a>
+    </p>
+  </main>
 
-      <div class="contact-block">
-        <div class="contact-item">
-          <span class="contact-icon">🌐</span>
-          <div class="contact-detail">
-            <span class="label">Website</span>
-            <span class="value"><a href="https://crawlio.xyz" target="_blank" rel="noopener">crawlio.xyz</a></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <script>
+    (function() {
+      const starsContainer = document.getElementById('stars');
+      const STAR_COUNT = 38;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const star = document.createElement('span');
+        star.classList.add('star');
+        const size = (Math.random() * 2.5 + 1).toFixed(2) + 'px';
+        star.style.width = size;
+        star.style.height = size;
+        star.style.left = (Math.random() * 100).toFixed(2) + '%';
+        star.style.top = (Math.random() * 110).toFixed(2) + '%';
+        star.style.animationDuration = (Math.random() * 13 + 10).toFixed(1) + 's';
+        star.style.animationDelay = (Math.random() * 16).toFixed(1) + 's';
+        star.style.opacity = (Math.random() * 0.4 + 0.6).toFixed(2);
+        starsContainer.appendChild(star);
+      }
+    })();
+  </script>
 </body>
 </html>
